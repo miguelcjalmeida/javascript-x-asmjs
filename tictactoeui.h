@@ -4,7 +4,8 @@
 #include "tictactoegame.h"
 
 int getPlayerMove(struct game* game);
-void printGame(struct game* game);
-void keepPlayingUntilEndOfTurn(struct game* game);
+void printGame(struct game* game, int score);
+void keepPlayingUntilEndOfGame(struct game* game, int depth);
+void showResults(struct game* game);
 
 #endif

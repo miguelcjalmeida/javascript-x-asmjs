@@ -8,17 +8,26 @@
      abs(_a) > abs(_b) ? _a : _b; })
 
 struct game* initGame(int size){
-	struct game* game = malloc(sizeof(game));
-	game->board = malloc(sizeof(*game->board) * size);
-	game->size = size;
-
+	struct game* game = calloc(sizeof(struct game), 1);
+	game->size = size; 
+	game->board = calloc(sizeof(int *), size);
+	
 	for(int i=0; i<game->size; i++){
-		game->board[i] = malloc(sizeof(*game->board[i]) * game->size); 
+		game->board[i] = calloc(sizeof(int), game->size); 
 	}
-	
+		
 	resetGame(game);
-	
 	return game;
+}
+
+
+void freeGame(struct game* game){
+	for(int i=0; i<game->size; i++){
+		free(game->board[i]); 
+	}	
+	
+	free(game->board);		
+	free(game);
 }
 
 void resetGame(struct game* game){	
@@ -28,11 +37,12 @@ void resetGame(struct game* game){
 	for(int i=0; i<game->size; i++)
 		for(int j=0; j<game->size; j++)
 			game->board[i][j] = PLAYER_NONE; 	
+		
 }
 
 void makeOneMove(struct game* game, int row, int col){	
 	game->board[row][col] = game->currentPlayer;
-	
+	game->movesMade++;
 	game->currentPlayer = getEnemy(game->currentPlayer);
 }
 

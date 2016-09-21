@@ -5,6 +5,7 @@
 #define PLAYER_1 	-1
 #define PLAYER_2 	1
 #define TRUE 		1
+#define FALSE 		1
 
 struct game {
 	int** board;
@@ -21,4 +22,5 @@ int getEnemy(int player);
 int isGameOver(struct game* game);
 int getWinner(struct game* game);
 struct game* cloneGame(struct game* game);
+void freeGame(struct game* game);
 #endif
