@@ -5,7 +5,8 @@
 
 int getPlayerMove(struct game* game);
 void printGame(struct game* game, int score);
-void keepPlayingUntilEndOfGame(struct game* game, int depth);
+void keepPlayingUntilEndOfGame(struct game** game, int depth);
 void showResults(struct game* game);
+void playCpuVsCpu(struct game** game, int depth);
 
 #endif

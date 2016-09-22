@@ -37,30 +37,60 @@ int getPlayerMove(struct game* game){
 	return atoi(digits);
 }
 
-void keepPlayingUntilEndOfGame(struct game* game, int depth){
+void keepPlayingUntilEndOfGame(struct game** game, int depth){
+	struct game* cpuNextMove;
+	int cpuNextMoveScore;
+	
 	while(TRUE){
 		system("cls");
-		
-		struct evaluation* cpuPositionEvaluation = getBestMove(game, depth);
+				
+		printf("start round\n\ngame address: %d\n", *game);
 
-		printGame(game, cpuPositionEvaluation->score);
+		if(!getBestMove(*game, depth, &cpuNextMove, &cpuNextMoveScore)){			
+			printGame(*game, cpuNextMoveScore);
+			break;
+		}
+				
+		printGame(*game, cpuNextMoveScore);
 					
-		if(isGameOver(game))
+		if(isGameOver(*game))
 			break;
 		
-		int position = getPlayerMove(game);
-		
+		int position = getPlayerMove(*game);
+
 		if(position != 0)
 		{
 			position -= 1;
-			int row = position / game->size;
-			int col = position % game->size;
-			makeOneMove(game, row, col);
+			int row = position / (*game)->size;
+			int col = position % (*game)->size;
+			makeOneMove(*game, row, col);
+			freeGame(cpuNextMove);
 		}
 		else{
-			*game = *cpuPositionEvaluation->bestNode;
-		}
+			freeGame(*game);
+			*game = cpuNextMove;
+		}		
+		
+		printf("next round game address: %d\n", *game);
+		getchar();
 	}		
+}
+
+void playCpuVsCpu(struct game** game, int depth){
+	struct game* cpuNextMove;
+	int cpuNextMoveScore;
+	
+	while(TRUE){
+		if(!getBestMove(*game, depth, &cpuNextMove, &cpuNextMoveScore)){			
+			break;
+		}
+					
+		if(isGameOver(*game))
+			break;		
+
+		freeGame(*game);
+		*game = cpuNextMove;
+	}
 }
 
 void showResults(struct game* game){

@@ -6,10 +6,12 @@
 
 int main () {	
 	
-	for(int i=0; i< 400000; i++){
-		struct game* game = initGame(SIZE);
-				
-		freeGame(game);
+	struct game* game = initGame(3);
+	struct game* p;
+	
+	for(int i=0; i<300000; i++){
+		struct game* clone = cloneGame(game);
+		p = clone;
 	}
 	
 	system("pause");

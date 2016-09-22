@@ -20,40 +20,65 @@ int getHeuristicScore(struct game* game){
 	return 0;
 }
 
-struct evaluation* minimax(struct game* game, int depth){	
+int minimax(struct game* game, int depth){	
 	
 	if(depth == 0 || isGameOver(game))
 	{
-		struct evaluation* evaluation = calloc(sizeof(struct evaluation), 1);
-		evaluation->score = getHeuristicScore(game);
-		return evaluation;
+		return getHeuristicScore(game);
 	}
 	
-	struct evaluation* bestEvaluation = calloc(sizeof(struct evaluation), 1);
-
-	bestEvaluation->score = -100;
+	int bestNextMoveScore = 0;
+	int anyNextMovePicked = FALSE;
 	
 	for(int i=0; i<game->size; i++){
 		for(int j=0; j<game->size; j++){
 			if(game->board[i][j] == PLAYER_NONE)
 			{ 
-				struct game* childNode = cloneGame(game);
-				makeOneMove(childNode, i, j);
-							
-				struct evaluation* childEvaluation = minimax(childNode, depth-1);
+				struct game* nextMoveGame = cloneGame(game);
+				makeOneMove(nextMoveGame, i, j);
+												
+				int nextMoveScore = -minimax(nextMoveGame, depth-1);
 				
-				if(-childEvaluation->score > bestEvaluation->score){
-					bestEvaluation->bestNode = childNode;
-					bestEvaluation->score = -childEvaluation->score;					
+				if(anyNextMovePicked == FALSE || nextMoveScore > bestNextMoveScore){		
+					bestNextMoveScore = nextMoveScore;
+					anyNextMovePicked = TRUE;
 				}
+				
+				freeGame(nextMoveGame);
 			}
 		}
 	}
 	
-	return bestEvaluation;
+	return bestNextMoveScore;
 }
 
-struct evaluation* getBestMove(struct game* game, int depth){
-	return minimax(game, depth); 
+int getBestMove(struct game* game, int depth, struct game** bestMove, int* bestScore){
+	int foundAnyAlready = FALSE;
+		
+	for(int i=0; i<game->size; i++){
+		for(int j=0; j<game->size; j++){
+			if(game->board[i][j] == PLAYER_NONE)
+			{ 	
+				struct game* nextMoveGame = cloneGame(game);
+				makeOneMove(nextMoveGame, i, j);
+								
+				int score = -minimax(nextMoveGame, depth);
+					
+				if(!foundAnyAlready || score > *bestScore){	
+					if(foundAnyAlready){
+						//freeGame(*bestMove);
+					}
+					*bestScore = score;
+					*bestMove = nextMoveGame;
+					foundAnyAlready = TRUE;
+				}
+				else {
+					freeGame(nextMoveGame);					
+				}			
+			}
+		}	
+	}	
+
+	return foundAnyAlready;
 }
 

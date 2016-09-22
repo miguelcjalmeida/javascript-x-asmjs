@@ -5,7 +5,7 @@
 #define PLAYER_1 	-1
 #define PLAYER_2 	1
 #define TRUE 		1
-#define FALSE 		1
+#define FALSE 		0
 
 struct game {
 	int** board;

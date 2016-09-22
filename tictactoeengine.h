@@ -7,7 +7,7 @@ struct evaluation {
 	struct game* bestNode;
 };
 
-struct evaluation* getBestMove(struct game* game, int depth);
+int getBestMove(struct game* game, int depth, struct game** bestMove, int* score);
 
 #endif
 

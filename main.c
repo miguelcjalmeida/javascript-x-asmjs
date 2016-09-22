@@ -7,13 +7,15 @@
 int main () {	
 
 	struct game* game = initGame(SIZE);
-
+/*
 	while(TRUE){
-		keepPlayingUntilEndOfGame(game, ENGINE_DEPTH);
+		keepPlayingUntilEndOfGame(&game, ENGINE_DEPTH);	
 		showResults(game);		
 		getchar();
 		resetGame(game);
-	}
+	}*/
+	
+	playCpuVsCpu(&game, ENGINE_DEPTH);
 	
 	return 0;
 }
